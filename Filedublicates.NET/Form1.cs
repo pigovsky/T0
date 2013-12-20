@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -17,21 +18,21 @@ namespace Filedublicates.NET
     {
         FilesBySize filesWithSameLength;
 
-        DateTime lastUpdate = DateTime.Now;
+        delegate void rootTreeNodeAddedCallback(long key);
 
-        public bool needUpdate
+        public void rootTreeNodeAdded(long key)
         {
-            get
-            {
-                if ((DateTime.Now - lastUpdate).Milliseconds
-                    >= 1000)
-                {
-                    lastUpdate = DateTime.Now;
-                    return true;
-                }
-                return false;
+            if (treeView1.InvokeRequired)
+                Invoke(new rootTreeNodeAddedCallback(rootTreeNodeAdded));
+            else
+            {                
+                var tn = new TreeNode();
+                tn.Tag = key;
+                tn.Text = key.ToString();
+                treeView1.Nodes.Add(tn);                    
             }
         }
+
 
         public void rootTreeNodeAdded()
         {            
@@ -39,20 +40,25 @@ namespace Filedublicates.NET
                 Invoke(new ThreadStart(rootTreeNodeAdded));
             else
             {
+                var sortedDict = from entry in filesWithSameLength where entry.Value.Count>1 orderby entry.Value.Count descending, entry.Key ascending select entry;
                 //MessageBox.Show(filesWithSameLength.Count.ToString());
                 treeView1.Nodes.Clear();
-                foreach (var key in filesWithSameLength.Keys)
-                {
-                    treeView1.Nodes.Add(
-                        new TreeNode(key.ToString()));
-                    //MessageBox.Show(key.ToString());
+                foreach (var entry in sortedDict)
+                {                                      
+                    var tn = new TreeNode();
+                    tn.Tag = entry.Key;
+                    tn.Text = ""+ entry.Value.Count+ " files of " + entry.Key + " bytes";
+                    treeView1.Nodes.Add(tn);
+                    foreach (var file in entry.Value)
+                        tn.Nodes.Add(file.FullName);                                          
                 }
-                treeView1.Update();
+                
             }
         }
 
         public void fileProcessed()
-        {            
+        {
+            //MessageBox.Show("File is processed");
             if (statusStrip1.InvokeRequired)
                 Invoke(new ThreadStart(fileProcessed));
             else
@@ -87,7 +93,7 @@ namespace Filedublicates.NET
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = "*.fs";
-
+            sfd.ShowDialog();
             string filename = sfd.FileName;
             // Persist to file
             FileStream stream = File.Create(filename);
@@ -111,6 +117,11 @@ namespace Filedublicates.NET
             stream.Close();
 
             rootTreeNodeAdded();
+        }
+
+        private void treeView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Process.Start("notepad.exe", treeView1.SelectedNode.Text);
         }
     }
 }

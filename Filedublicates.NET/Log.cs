@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Filedublicates.NET
 {
@@ -16,14 +17,16 @@ namespace Filedublicates.NET
             get
             {
                 if (_logFile == null)
-                    _logFile = File.CreateText("log.txt");
+                    _logFile = File.CreateText(@"C:\HOME\Jurgen\log.txt");
                 return _logFile;
             }            
         }
 
         public static void error(Exception e)
         {
-            logFile.WriteLine(e.ToString());
+            string msg = e.ToString();
+            //MessageBox.Show(msg);
+            logFile.WriteLine(msg);
         }
     }
 }

@@ -2,16 +2,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Filedublicates.NET
 {
+    [Serializable]
     class FilesBySize : Dictionary<long, FileList>
     {
         public TimeSpan elapsed { get; set; }
 
         private DirectoryInfo parentDir;
+
+        public FilesBySize() { }
+
+        public FilesBySize(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         public FilesBySize(DirectoryInfo dir, Form1 form)
         {
@@ -37,6 +44,10 @@ namespace Filedublicates.NET
             DateTime t0 = DateTime.Now;
             searchFilesWithSameLength(parentDir);
             elapsed = DateTime.Now - t0;
+            
+            MessageBox.Show("Searching of files with the same length in "
+                + parentDir + " is finished");
+
             form.rootTreeNodeAdded();
         }
 
@@ -74,20 +85,22 @@ namespace Filedublicates.NET
 
         public void AddFile(FileInfo file)
         {
+            long fileLength = file.Length;
             FileList fileList = null;
-            if (this.ContainsKey(file.Length))
-                fileList = this[file.Length];
+            if (this.ContainsKey(fileLength))
+                fileList = this[fileLength];
             else
             {
                 fileList = new FileList();
-                this.Add(file.Length, fileList);
-                if (form.needUpdate)
-                    form.rootTreeNodeAdded();
+                this.Add(fileLength, fileList);
+                //if (needUpdate)
+                    //form.rootTreeNodeAdded(fileLength);
             }
             fileList.Add(file);
             filesProcessed++;
         }
 
+        
         public Form1 form { get; set; }
 
         int _directoriesProcessed;
@@ -101,7 +114,7 @@ namespace Filedublicates.NET
             set
             {
                 _directoriesProcessed = value;
-                if (form.needUpdate)
+                if (needUpdate)
                     form.fileProcessed();
             }
         
@@ -118,9 +131,29 @@ namespace Filedublicates.NET
             set
             {
                 _filesProcessed = value;
-                if (form.needUpdate)
+                if (needUpdate)
                     form.fileProcessed();
             }
         }
+
+        DateTime lastUpdate = DateTime.Now;
+
+        public bool needUpdate
+        {
+            get
+            {
+                var ms = (DateTime.Now - lastUpdate).TotalMilliseconds;
+                if ( ms
+                    >= 1000)
+                {
+                    lastUpdate = DateTime.Now;
+                    return true;
+                }
+                return false;
+            }
+        }
+
+
+
     }
 }

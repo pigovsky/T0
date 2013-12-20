@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Filedublicates.NET
 {
+    [Serializable]
     class FileList : List<FileInfo>
     {
     }
