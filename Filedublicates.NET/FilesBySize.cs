@@ -12,7 +12,15 @@ namespace Filedublicates.NET
     [Serializable]
     class FilesBySize : Dictionary<long, FileList>
     {
-        public TimeSpan elapsed { get; set; }
+        private TimeSpan _elapsed;
+
+        public TimeSpan elapsed 
+        {
+            get
+            {
+                return _elapsed;
+            }
+        }
 
         private DirectoryInfo parentDir;
 
@@ -43,7 +51,7 @@ namespace Filedublicates.NET
             filesProcessed = 0;
             DateTime t0 = DateTime.Now;
             searchFilesWithSameLength(parentDir);
-            elapsed = DateTime.Now - t0;
+            _elapsed = DateTime.Now - t0;
             
             MessageBox.Show("Searching of files with the same length in "
                 + parentDir + " is finished");

@@ -40,7 +40,7 @@ namespace Filedublicates.NET
                 Invoke(new ThreadStart(rootTreeNodeAdded));
             else
             {
-                var sortedDict = from entry in filesWithSameLength where entry.Value.Count>1 orderby entry.Value.Count descending, entry.Key ascending select entry;
+                var sortedDict = (from entry in filesWithSameLength where entry.Value.Count>1 orderby entry.Value.Count descending, entry.Key ascending select entry).Take(100);
                 //MessageBox.Show(filesWithSameLength.Count.ToString());
                 treeView1.Nodes.Clear();
                 foreach (var entry in sortedDict)
@@ -49,8 +49,7 @@ namespace Filedublicates.NET
                     tn.Tag = entry.Key;
                     tn.Text = ""+ entry.Value.Count+ " files of " + entry.Key + " bytes";
                     treeView1.Nodes.Add(tn);
-                    foreach (var file in entry.Value)
-                        tn.Nodes.Add(file.FullName);                                          
+                    tn.Nodes.Add("stub");                  
                 }
                 
             }
@@ -78,10 +77,11 @@ namespace Filedublicates.NET
 
         private void searchFilesWithSameLengthToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.ShowDialog();
+            FolderBrowserDialog ofd = new FolderBrowserDialog();
+            if (ofd.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
             DirectoryInfo dir = 
-                new FileInfo(ofd.FileName).Directory;
+                new DirectoryInfo(ofd.SelectedPath);
             filesWithSameLength = new FilesBySize(dir, this);
 
             toolStripStatusLabel1.Text = "files are being searched in "+dir;
@@ -93,7 +93,9 @@ namespace Filedublicates.NET
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = "*.fs";
-            sfd.ShowDialog();
+            if (sfd.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+            
             string filename = sfd.FileName;
             // Persist to file
             FileStream stream = File.Create(filename);
@@ -108,7 +110,9 @@ namespace Filedublicates.NET
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.FileName = "*.fs";
-            ofd.ShowDialog();
+            if (ofd.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
             string filename = ofd.FileName;
             // Restore from file
             FileStream stream = File.OpenRead(filename);
@@ -121,7 +125,53 @@ namespace Filedublicates.NET
 
         private void treeView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            Process.Start("notepad.exe", treeView1.SelectedNode.Text);
+            FileInfo file = (FileInfo) treeView1.SelectedNode.Tag;
+            Environment.CurrentDirectory = file.Directory.FullName;
+            Process.Start("notepad.exe", file.Name);
+        }
+
+        private void exportInfoAboutFilesWithSameLengthToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = "*.m";
+            if (sfd.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
+            var sortedDict = from entry in filesWithSameLength where entry.Value.Count > 1 orderby entry.Value.Count ascending, entry.Key ascending select entry;
+
+            var file = File.CreateText(sfd.FileName);
+
+            file.WriteLine("files = [\n" +
+                "\t% Number of files\t file length");
+
+            foreach (var entry in sortedDict)
+                file.WriteLine("\t" + entry.Value.Count + "\t" + entry.Key);
+            file.WriteLine("];");
+            file.WriteLine("% Files with same length were found in " +
+                            filesWithSameLength.elapsed.TotalMilliseconds
+                            + " milliseconds");
+            file.Close();
+        }
+
+        private void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            TreeNode tn = e.Node;
+            tn.Nodes.Clear();
+
+            foreach (var file in filesWithSameLength[(long)tn.Tag])
+            {
+                var fn = new TreeNode();
+                fn.Tag = file;
+                try
+                {
+                    fn.Text = file.FullName;
+                }
+                catch (Exception err)
+                {
+                    fn.Text = "crazy-long file path...";
+                }
+                tn.Nodes.Add(fn);
+            }
         }
     }
 }
