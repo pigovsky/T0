@@ -16,7 +16,7 @@ namespace Filedublicates.NET
 {
     public partial class Form1 : Form
     {
-        FilesBySize filesWithSameLength;
+        GroupFilesBySize filesWithSameLength;
 
         delegate void rootTreeNodeAddedCallback(long key);
 
@@ -82,7 +82,7 @@ namespace Filedublicates.NET
                 return;
             DirectoryInfo dir = 
                 new DirectoryInfo(ofd.SelectedPath);
-            filesWithSameLength = new FilesBySize(dir, this);
+            filesWithSameLength = new GroupFilesBySize(dir, this);
 
             toolStripStatusLabel1.Text = "files are being searched in "+dir;
 
@@ -117,7 +117,7 @@ namespace Filedublicates.NET
             // Restore from file
             FileStream stream = File.OpenRead(filename);
             
-            filesWithSameLength = (FilesBySize)formatter.Deserialize(stream);
+            filesWithSameLength = (GroupFilesBySize)formatter.Deserialize(stream);
             stream.Close();
 
             rootTreeNodeAdded();

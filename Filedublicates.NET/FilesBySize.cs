@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace Filedublicates.NET
 {
     [Serializable]
-    class FilesBySize : Dictionary<long, FileList>
+    class GroupFilesBySize : Dictionary<long, FileList>, IGroupFiles
     {
         private TimeSpan _elapsed;
 
@@ -24,11 +24,12 @@ namespace Filedublicates.NET
 
         private DirectoryInfo parentDir;
 
-        public FilesBySize() { }
+        public GroupFilesBySize() { }
 
-        public FilesBySize(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        public GroupFilesBySize(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
-        public FilesBySize(DirectoryInfo dir, Form1 form)
+
+        public GroupFilesBySize(DirectoryInfo dir, Form1 form)
         {
             this.form = form;
             this.parentDir = dir;

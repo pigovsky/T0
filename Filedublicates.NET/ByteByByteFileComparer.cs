@@ -10,16 +10,50 @@ namespace Filedublicates.NET
 {
     class ByteByByteFileComparer
     {
-        byte[] buffer1 = new byte[Environment.SystemPageSize];
-        byte[] buffer2 = new byte[Environment.SystemPageSize];
+        static byte[] buffer1 = new byte[Environment.SystemPageSize];
+        static byte[] buffer2 = new byte[Environment.SystemPageSize];
 
-        public FileStream f1 {get; set;}
-        public FileStream f2 { get; set; }
+        static void detectDuplicates(FileList files, List<FileList> duplicates)
+        {
+            for (int i = 0; i < files.Count; i++)
+            {
+                var files_i = files[i]; 
+                if (files_i == null)
+                    continue;
+                FileStream f1 = files_i.OpenRead();
+                FileList same = null;
+                
+                for (int j = i+1; j < files.Count; j++)
+                {
+                    var files_j = files[j];
+                    if (files_j == null)
+                        continue;
+                    FileStream f2 = files_j.OpenRead();
+
+                    if (compareFiles(f1, f2))
+                    {
+                        if (same == null)
+                        {
+                            same = new FileList();
+                            same.Add(files_i);
+                        }
+                        same.Add(files_j);
+                        files[j] = null;
+                    }
+
+                    f2.Close();
+                }
+                if (same != null)
+                    duplicates.Add(same);
+
+                f1.Close();
+            }
+        }
 
         [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int memcmp(byte[] b1, byte[] b2, long count);
-        
-        public bool compareFiles()
+
+        static public bool compareFiles(FileStream f1, FileStream f2)
         {
             f1.Seek(0, SeekOrigin.Begin);
             f2.Seek(0, SeekOrigin.Begin);
