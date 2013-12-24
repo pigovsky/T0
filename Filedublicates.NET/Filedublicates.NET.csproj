@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ByteByByteFileComparer.cs" />
     <Compile Include="Files.cs" />
     <Compile Include="FilesBySize.cs" />
     <Compile Include="Form1.cs">
