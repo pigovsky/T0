@@ -133,7 +133,7 @@ namespace Filedublicates.NET
         private void exportInfoAboutFilesWithSameLengthToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.FileName = "*.m";
+            sfd.FileName = "*.sce";
             if (sfd.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 return;
 
@@ -142,23 +142,43 @@ namespace Filedublicates.NET
             var file = File.CreateText(sfd.FileName);
 
             file.WriteLine("files = [\n" +
-                "\t% Number of files\t file length");
+                "//\t Number of files\t file length");
 
             foreach (var entry in sortedDict)
                 file.WriteLine("\t" + entry.Value.Count + "\t" + entry.Key);
             file.WriteLine("];");
-            file.WriteLine("% Files with same length were found in " +
-                            filesWithSameLength.elapsed.TotalMilliseconds
-                            + " milliseconds");
+            file.WriteLine("// Files with same length were found in " +
+                            filesWithSameLength.elapsed.TotalSeconds
+                            + " seconds");
+            file.WriteLine("readTimes = [");
+            file.WriteLine("//\tBytes\tNanoseconds");
+            foreach (var entry in readTimes)
+                file.WriteLine("\t" + entry.Key + "\t" + entry.Value);
+            file.WriteLine("Following duplicates were found in " +
+                ByteByByteFileComparer.totalTimeElapsed + " seconds");
+            foreach (var entry in allDuplicates)
+            {
+                if (entry.Count >= 2)
+                {
+                    file.WriteLine("Folloting "+entry.Count+ " files are with equal content");
+                    foreach (var f in entry)
+                        file.WriteLine(f);
+
+                    file.WriteLine();
+                }
+            }
             file.Close();
         }
 
         private void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             TreeNode tn = e.Node;
+            long fileSize = (long)tn.Tag;
+            var filesGroup = filesWithSameLength[fileSize];
+
             tn.Nodes.Clear();
 
-            foreach (var file in filesWithSameLength[(long)tn.Tag])
+            foreach (var file in filesGroup)
             {
                 var fn = new TreeNode();
                 fn.Tag = file;
@@ -172,6 +192,29 @@ namespace Filedublicates.NET
                 }
                 tn.Nodes.Add(fn);
             }
+        }
+
+        Dictionary<long, double> readTimes = new Dictionary<long,double>();
+
+        List<FileList> allDuplicates = new List<FileList>();
+
+        private void byteByByteComparsionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            long fileSize = (long)treeView1.SelectedNode.Tag;
+            var filesGroup = filesWithSameLength[fileSize];
+            ByteByByteFileComparer.files= filesGroup;
+            ByteByByteFileComparer.duplicates = allDuplicates;
+            ByteByByteFileComparer.readTimes = readTimes;
+
+
+            SearchingDuplicates sd = new SearchingDuplicates();
+
+            Thread th = new Thread(new 
+                ThreadStart(ByteByByteFileComparer.detectDuplicates));
+            th.Start();
+
+            sd.ShowDialog();
+
         }
     }
 }

@@ -33,10 +33,13 @@
             this.searchFilesWithSameLengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadInfoAboutFilesWithSameLengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadInfoAboutFilesWithSameLengthToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportInfoAboutFilesWithSameLengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.exportInfoAboutFilesWithSameLengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.findDuplicatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.byteByByteComparsionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hashingByteByByteComparsionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -44,7 +47,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.findDuplicatesToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(284, 24);
@@ -83,6 +87,13 @@
             this.loadInfoAboutFilesWithSameLengthToolStripMenuItem1.Text = "Load info about files with same length";
             this.loadInfoAboutFilesWithSameLengthToolStripMenuItem1.Click += new System.EventHandler(this.loadInfoAboutFilesWithSameLengthToolStripMenuItem1_Click);
             // 
+            // exportInfoAboutFilesWithSameLengthToolStripMenuItem
+            // 
+            this.exportInfoAboutFilesWithSameLengthToolStripMenuItem.Name = "exportInfoAboutFilesWithSameLengthToolStripMenuItem";
+            this.exportInfoAboutFilesWithSameLengthToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this.exportInfoAboutFilesWithSameLengthToolStripMenuItem.Text = "Export info about files with same length...";
+            this.exportInfoAboutFilesWithSameLengthToolStripMenuItem.Click += new System.EventHandler(this.exportInfoAboutFilesWithSameLengthToolStripMenuItem_Click);
+            // 
             // treeView1
             // 
             this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -111,12 +122,27 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
-            // exportInfoAboutFilesWithSameLengthToolStripMenuItem
+            // findDuplicatesToolStripMenuItem
             // 
-            this.exportInfoAboutFilesWithSameLengthToolStripMenuItem.Name = "exportInfoAboutFilesWithSameLengthToolStripMenuItem";
-            this.exportInfoAboutFilesWithSameLengthToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
-            this.exportInfoAboutFilesWithSameLengthToolStripMenuItem.Text = "Export info about files with same length...";
-            this.exportInfoAboutFilesWithSameLengthToolStripMenuItem.Click += new System.EventHandler(this.exportInfoAboutFilesWithSameLengthToolStripMenuItem_Click);
+            this.findDuplicatesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.byteByByteComparsionToolStripMenuItem,
+            this.hashingByteByByteComparsionToolStripMenuItem});
+            this.findDuplicatesToolStripMenuItem.Name = "findDuplicatesToolStripMenuItem";
+            this.findDuplicatesToolStripMenuItem.Size = new System.Drawing.Size(99, 20);
+            this.findDuplicatesToolStripMenuItem.Text = "Find duplicates";
+            // 
+            // byteByByteComparsionToolStripMenuItem
+            // 
+            this.byteByByteComparsionToolStripMenuItem.Name = "byteByByteComparsionToolStripMenuItem";
+            this.byteByByteComparsionToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
+            this.byteByByteComparsionToolStripMenuItem.Text = "Byte by byte comparsion";
+            this.byteByByteComparsionToolStripMenuItem.Click += new System.EventHandler(this.byteByByteComparsionToolStripMenuItem_Click);
+            // 
+            // hashingByteByByteComparsionToolStripMenuItem
+            // 
+            this.hashingByteByByteComparsionToolStripMenuItem.Name = "hashingByteByByteComparsionToolStripMenuItem";
+            this.hashingByteByByteComparsionToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
+            this.hashingByteByByteComparsionToolStripMenuItem.Text = "Hashing + byte by byte comparsion";
             // 
             // Form1
             // 
@@ -149,6 +175,9 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripMenuItem exportInfoAboutFilesWithSameLengthToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem findDuplicatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem byteByByteComparsionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hashingByteByByteComparsionToolStripMenuItem;
     }
 }
 

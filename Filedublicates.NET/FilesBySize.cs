@@ -94,6 +94,16 @@ namespace Filedublicates.NET
 
         public void AddFile(FileInfo file)
         {
+            // Check if we can process the full file path:
+            try
+            {
+                string fullname = file.FullName;                
+            }
+            catch (Exception e)
+            {
+                // if we cannot -- then ignore the file
+                return;
+            }
             long fileLength = file.Length;
             FileList fileList = null;
             if (this.ContainsKey(fileLength))
