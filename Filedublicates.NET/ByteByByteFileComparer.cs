@@ -11,11 +11,11 @@ namespace Filedublicates.NET
     public class ByteByByteFileComparer : Filedublicates.NET.AbstractComparer
     {
 
-        public long fileLength { get; set; }
+        
 
         public long totalNumberOfCmpOps()
         {
-            return files.Count * (files.Count - 1) * fileLength;
+            return files.Count * (files.Count - 1) * fileLength ;
         }
 
         byte[] buffer1 = new byte[Environment.SystemPageSize];
@@ -31,8 +31,9 @@ namespace Filedublicates.NET
         {
             DateTime startAll = DateTime.Now;
             numberOfCmpOpPassed = 0;
+            
             for (int i = 0; i < files.Count-1;
-                numberOfCmpOpPassed = fileLength * (2 * files.Count - i - 2) * (i + 1), i++)
+                numberOfCmpOpPassed = fileLength * (2 * files.Count - i - 2) * (i),i++ )
             {
                 var files_i = files[i]; 
                 if (files_i == null)
@@ -41,8 +42,8 @@ namespace Filedublicates.NET
                 FileList same = null;
 
                 for (int j = i + 1; j < files.Count; 
-                    numberOfCmpOpPassed = fileLength * (2 * files.Count - i - 2) * (i + 1)+
-                    (j - i) * (2 * fileLength), j++)
+                    numberOfCmpOpPassed = fileLength * (2 * files.Count - i - 2) * (i)+
+                    (j - i - 1) * (2 * fileLength),j++ )
                 {
                     var files_j = files[j];
                     if (files_j == null)
@@ -84,6 +85,7 @@ namespace Filedublicates.NET
 
                 f1.Close();
             }
+            numberOfCmpOpPassed = totalNumberOfCmpOps();
             if (totalTimeElapsed != null)
             {
                 totalTimeElapsed.Add(fileLength, (DateTime.Now - startAll).TotalSeconds);
