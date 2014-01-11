@@ -8,38 +8,41 @@ using System.Threading.Tasks;
 
 namespace Filedublicates.NET
 {
-    static class ByteByByteFileComparer
+    public class ByteByByteFileComparer : Filedublicates.NET.AbstractComparer
     {
-        static public double totalTimeElapsed = 0;
 
-        public static long totalNumberOfCmpOps()
+        public long fileLength { get; set; }
+
+        public long totalNumberOfCmpOps()
         {
-            return files.Count * (files.Count - 1) / 2;
+            return files.Count * (files.Count - 1) * fileLength;
         }
 
-        static byte[] buffer1 = new byte[Environment.SystemPageSize];
-        static byte[] buffer2 = new byte[Environment.SystemPageSize];
-        static long numberOfBytesRead;
-        public static long numberOfCmpOpPassed { get; set; }
+        byte[] buffer1 = new byte[Environment.SystemPageSize];
+        byte[] buffer2 = new byte[Environment.SystemPageSize];
+        
+        long numberOfBytesRead;
+        public long numberOfCmpOpPassed { get; set; }     
+        
+        public List<FileList> duplicates {get; set;}
+        public Dictionary<long, double> readTimes { get; set; }
 
-        public static FileList files {get;set;}
-        public static List<FileList> duplicates {get; set;}
-        public static Dictionary<long, double> readTimes { get; set; }
-
-        public static void detectDuplicates()
+        override public void detectDuplicates()
         {
             DateTime startAll = DateTime.Now;
             numberOfCmpOpPassed = 0;
-            for (int i = 0; i < files.Count-1; i++,
-                numberOfCmpOpPassed = (2 * files.Count - i - 2) / 2 * (i + 1))
+            for (int i = 0; i < files.Count-1;
+                numberOfCmpOpPassed = fileLength * (2 * files.Count - i - 2) * (i + 1), i++)
             {
                 var files_i = files[i]; 
                 if (files_i == null)
                     continue;
                 FileStream f1 = files_i.OpenRead();
                 FileList same = null;
-                
-                for (int j = i+1; j < files.Count; j++)
+
+                for (int j = i + 1; j < files.Count; 
+                    numberOfCmpOpPassed = fileLength * (2 * files.Count - i - 2) * (i + 1)+
+                    (j - i) * (2 * fileLength), j++)
                 {
                     var files_j = files[j];
                     if (files_j == null)
@@ -61,9 +64,7 @@ namespace Filedublicates.NET
                         files[j] = null;
                     }
 
-                    f2.Close();
-
-                    numberOfCmpOpPassed++;
+                    f2.Close();                    
 
                     DateTime finish = DateTime.Now;
                     double elapsed = (finish - start).TotalMilliseconds;
@@ -83,13 +84,16 @@ namespace Filedublicates.NET
 
                 f1.Close();
             }
-            totalTimeElapsed += (DateTime.Now - startAll).TotalSeconds;
+            if (totalTimeElapsed != null)
+            {
+                totalTimeElapsed.Add(fileLength, (DateTime.Now - startAll).TotalSeconds);
+            }
         }
 
         [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int memcmp(byte[] b1, byte[] b2, long count);
 
-        static public bool compareFiles(FileStream f1, FileStream f2)
+        public bool compareFiles(FileStream f1, FileStream f2)
         {
             f1.Seek(0, SeekOrigin.Begin);
             f2.Seek(0, SeekOrigin.Begin);
@@ -98,11 +102,13 @@ namespace Filedublicates.NET
             {
                 var bytesRead1 = f1.Read(buffer1, 0, buffer1.Length);
                 
-                numberOfBytesRead += bytesRead1;
+                numberOfBytesRead += bytesRead1;                
+                numberOfCmpOpPassed += bytesRead1;
 
                 var bytesRead2 = f2.Read(buffer2, 0, buffer2.Length);
 
                 numberOfBytesRead += bytesRead2;
+                numberOfCmpOpPassed += bytesRead2;
 
                 if (bytesRead1 != bytesRead2)
                     return false;

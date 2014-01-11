@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace Filedublicates.NET
 {
     [Serializable]
-    class GroupFilesBySize : Dictionary<long, FileList>, IGroupFiles
+    class GroupFilesBySize : Dictionary<long, FileList>
     {
         private TimeSpan _elapsed;
 

@@ -14,15 +14,20 @@ namespace Filedublicates.NET
     {
         Timer tmr = new Timer();
 
+        private Form1 mainForm;
+
         long totalCmpOps;
 
-        public SearchingDuplicates()
+        public SearchingDuplicates(Form1 mainForm)
         {
             InitializeComponent();
 
-            totalCmpOps = ByteByByteFileComparer.totalNumberOfCmpOps();
+            this.mainForm = mainForm;
+            totalCmpOps = mainForm.byteByByteFileComparer.totalNumberOfCmpOps();
 
             labelTotalCmpOpNumber.Text = totalCmpOps.ToString();
+            if (mainForm.hashingAndByteByByteComparer!=null)
+                labelTotalHashingOp.Text = mainForm.hashingAndByteByByteComparer.groupFilesByHash.totalNumberOfBytesToBeHashed.ToString();
             tmr.Tick += tmr_Tick;
             tmr.Interval = 1000;
             tmr.Start();
@@ -30,13 +35,26 @@ namespace Filedublicates.NET
 
         void tmr_Tick(object sender, EventArgs e)
         {
-            labelCmpOpPassed.Text = ByteByByteFileComparer.numberOfCmpOpPassed.
-                ToString();
-            progressBarByteByByteComparsion.Value =(int)
-                (ByteByByteFileComparer.numberOfCmpOpPassed * 100 / totalCmpOps);
+            if (mainForm.byteByByteFileComparer != null)
+            {
+                labelCmpOpPassed.Text = mainForm.byteByByteFileComparer.numberOfCmpOpPassed.
+                    ToString();
+                progressBarByteByByteComparsion.Value = (int)
+                    (mainForm.byteByByteFileComparer.numberOfCmpOpPassed * 100 / totalCmpOps);
 
-            if (progressBarByteByByteComparsion.Value >= 100)
-                Hide();
+                if (progressBarByteByByteComparsion.Value >= 100 && mainForm.hashingAndByteByByteComparer == null)
+                    Hide();
+            }
+
+            if (mainForm.hashingAndByteByByteComparer != null)
+            {
+                var habbc = mainForm.hashingAndByteByByteComparer;
+                var gfbh = habbc.groupFilesByHash;
+                progressBarHashing.Value = (int)
+                    (gfbh.bytesHashed * 100 /
+                    gfbh.totalNumberOfBytesToBeHashed);
+                labelPassedHashingOp.Text = habbc.hashGroupIndex.ToString();
+            }
         }
     }
 }

@@ -54,7 +54,8 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="GroupFilesByHash.cs" />
-    <Compile Include="IGroupFiles.cs" />
+    <Compile Include="HashingAndByteByByteComparer.cs" />
+    <Compile Include="AbstractComparer.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

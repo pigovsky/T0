@@ -40,6 +40,10 @@
             this.labelEstimatedTimeForCmp = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.labelTimePassed = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.labelTotalHashingOp = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.labelPassedHashingOp = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // progressBarByteByByteComparsion
@@ -156,11 +160,55 @@
             this.labelTimePassed.TabIndex = 11;
             this.labelTimePassed.Text = "0";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(13, 242);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(173, 13);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "Total number of hashing operations";
+            // 
+            // labelTotalHashingOp
+            // 
+            this.labelTotalHashingOp.AutoSize = true;
+            this.labelTotalHashingOp.Location = new System.Drawing.Point(192, 242);
+            this.labelTotalHashingOp.MaximumSize = new System.Drawing.Size(100, 0);
+            this.labelTotalHashingOp.MinimumSize = new System.Drawing.Size(100, 0);
+            this.labelTotalHashingOp.Name = "labelTotalHashingOp";
+            this.labelTotalHashingOp.Size = new System.Drawing.Size(100, 13);
+            this.labelTotalHashingOp.TabIndex = 13;
+            this.labelTotalHashingOp.Text = "0";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(13, 269);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(185, 13);
+            this.label8.TabIndex = 14;
+            this.label8.Text = "Number of passed hashing operations";
+            // 
+            // labelPassedHashingOp
+            // 
+            this.labelPassedHashingOp.AutoSize = true;
+            this.labelPassedHashingOp.Location = new System.Drawing.Point(204, 270);
+            this.labelPassedHashingOp.MaximumSize = new System.Drawing.Size(100, 0);
+            this.labelPassedHashingOp.MinimumSize = new System.Drawing.Size(100, 0);
+            this.labelPassedHashingOp.Name = "labelPassedHashingOp";
+            this.labelPassedHashingOp.Size = new System.Drawing.Size(100, 13);
+            this.labelPassedHashingOp.TabIndex = 13;
+            this.labelPassedHashingOp.Text = "0";
+            // 
             // SearchingDuplicates
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(406, 244);
+            this.ClientSize = new System.Drawing.Size(406, 292);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.labelPassedHashingOp);
+            this.Controls.Add(this.labelTotalHashingOp);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.labelTimePassed);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.labelEstimatedTimeForCmp);
@@ -194,5 +242,9 @@
         private System.Windows.Forms.Label labelEstimatedTimeForCmp;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label labelTimePassed;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label labelTotalHashingOp;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label labelPassedHashingOp;
     }
 }

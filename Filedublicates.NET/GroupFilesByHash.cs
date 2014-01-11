@@ -8,28 +8,25 @@ using System.Threading.Tasks;
 
 namespace Filedublicates.NET
 {
-    delegate string ComputeHash(FileInfo file);
-
-    class GroupFilesByHash : Dictionary<string, FileList>, IGroupFiles
+    public class GroupFilesByHash : Dictionary<string, FileList>
     {
-        static SHA1 sha1 = SHA1.Create();
+        public Dictionary<long, double> hashingTimes { get; set; }
+        public long bytesHashed { get; set; }
+        public static SHA1 sha1 = SHA1.Create();
+        public static MD5 md5 = MD5.Create();
+        public HashAlgorithm hashAlgorithm = md5;
 
-        ComputeHash computeHash = null;
+        public long totalNumberOfBytesToBeHashed { get; set; }    
 
-        public static string computeSHA1(FileInfo file)
+        private string computeHash(FileInfo file)
         {
             var fd = file.OpenRead();
-            string hashValue = Convert.ToBase64String(sha1.ComputeHash(fd));
+            string hashValue = Convert.ToBase64String(hashAlgorithm.ComputeHash(fd));
             fd.Close();
             return hashValue;
         }
 
-        public GroupFilesByHash(ComputeHash computeHash)
-        {
-            this.computeHash = computeHash;
-        }
-
-        public void AddFile(FileInfo file)
+        private void AddFile(FileInfo file)
         {
             string hashValue = computeHash(file);
             FileList fileList = null;
@@ -38,14 +35,37 @@ namespace Filedublicates.NET
             else
             {
                 fileList = new FileList();
-                this.Add(hashValue, fileList);
-                //if (needUpdate)
-                //form.rootTreeNodeAdded(fileLength);
+                this.Add(hashValue, fileList);                
             }
             fileList.Add(file);
+
+            bytesHashed += file.Length;
         }
 
         private TimeSpan _elapsed;
+
+        public void hashFiles(FileList fileList)
+        {            
+            DateTime allStart = DateTime.Now;
+            bytesHashed = 0;
+            totalNumberOfBytesToBeHashed = fileList.Count * fileList[0].Length;
+            foreach (var file in fileList)
+            {
+                DateTime start = DateTime.Now;
+                AddFile(file);
+                double e = (DateTime.Now - start).TotalMilliseconds;
+                if (hashingTimes.ContainsKey(file.Length))
+                {
+                    hashingTimes[file.Length] += e;
+                    hashingTimes[file.Length] *= .5;
+                }
+                else
+                {
+                    hashingTimes.Add(file.Length, e);
+                }
+            }
+            _elapsed = DateTime.Now - allStart;
+        }
 
         public TimeSpan elapsed
         {
