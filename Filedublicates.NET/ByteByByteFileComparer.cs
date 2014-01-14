@@ -32,18 +32,21 @@ namespace Filedublicates.NET
             DateTime startAll = DateTime.Now;
             numberOfCmpOpPassed = 0;
             
-            for (int i = 0; i < files.Count-1;
-                numberOfCmpOpPassed = fileLength * (2 * files.Count - i - 2) * (i),i++ )
+            for (int i = 0; i < files.Count-1; i++,
+                numberOfCmpOpPassed = fileLength * (2 * files.Count - i - 3) * i )
             {
+                
                 var files_i = files[i]; 
                 if (files_i == null)
                     continue;
+
+                long lastNumberOfCmpOpPassed = numberOfCmpOpPassed;
                 FileStream f1 = files_i.OpenRead();
                 FileList same = null;
 
-                for (int j = i + 1; j < files.Count; 
-                    numberOfCmpOpPassed = fileLength * (2 * files.Count - i - 2) * (i)+
-                    (j - i - 1) * (2 * fileLength),j++ )
+                for (int j = i + 1; j < files.Count;
+                    numberOfCmpOpPassed = lastNumberOfCmpOpPassed +
+                    fileLength * (j - i) * 2, j++)
                 {
                     var files_j = files[j];
                     if (files_j == null)
