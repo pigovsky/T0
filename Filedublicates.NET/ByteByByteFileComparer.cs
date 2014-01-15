@@ -11,14 +11,7 @@ namespace Filedublicates.NET
     public class ByteByByteFileComparer : Filedublicates.NET.AbstractComparer
     {
 
-        private long _totalNumberOfCmpOps;
-        public long totalNumberOfCmpOps
-        {
-            get
-            {
-                return _totalNumberOfCmpOps;
-            }
-        }
+        
 
         byte[] buffer1 = new byte[Environment.SystemPageSize];
         byte[] buffer2 = new byte[Environment.SystemPageSize];
@@ -37,13 +30,12 @@ namespace Filedublicates.NET
             filesWithSameLengthAndDuplicates.elapsed = DateTime.Now - startAll;
         }
 
+        
+
         public void detectDuplicates(FileList files)
-        {            
-            long fileLength = files[0].Length;
-
-            _totalNumberOfCmpOps = files.Count *
-                (files.Count - 1) * fileLength;
-
+        {
+            calculateTotalNumberOfCmpOps(files);
+            long fileLength = filesWithSameLengthAndDuplicates.fileLength;
             numberOfCmpOpPassed = 0;
 
             for (int i = 0; i < files.Count - 1; i++,
@@ -103,8 +95,10 @@ namespace Filedublicates.NET
                 }
                 f1.Close();
             }
-            numberOfCmpOpPassed = totalNumberOfCmpOps;            
+                     
         }
+
+        
 
         [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int memcmp(byte[] b1, byte[] b2, long count);

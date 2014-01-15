@@ -8,8 +8,16 @@ using System.Windows.Forms;
 
 namespace Filedublicates.NET
 {
+    [Serializable]
     public class FilesWithSameLengthAndDuplicates
     {
+        public long fileLength { get; set; }
+
+        public FilesWithSameLengthAndDuplicates(long fileLength)
+        {
+            this.fileLength = fileLength;
+        }
+
         public FileList filesWithSameLength { get; set; }
 
         public void Add(FileInfo f)
@@ -55,7 +63,7 @@ namespace Filedublicates.NET
             }
             else 
             {
-                long i = 0;
+                int i = 1;
                 foreach (var duplicateFiles in duplicates)
                 {
                     var duplicateFilesNode = new TreeNode();
@@ -64,6 +72,7 @@ namespace Filedublicates.NET
                         " files with content #" + i;
                     duplicateFilesNode.Nodes.Add("stub");
                     tn.Nodes.Add(duplicateFilesNode);
+                    ++i;
                 }
             }
         }
@@ -75,6 +84,24 @@ namespace Filedublicates.NET
                 duplicates = new List<FileList>();
             }
             duplicates.Add(same);
+        }
+
+        public override string ToString()
+        {
+            return "" + numberOfFilesWithSameLength + " files of " + fileLength + " bytes" +
+                (duplicates != null ? ", splitted to " +duplicates.Count + " duplicate groups "+
+                "in " + elapsed.TotalSeconds + " sec." : "") ;                                
+        }
+
+        public string descriptionString
+        {
+            get
+            {
+                return ""+numberOfFilesWithSameLength + "\t" +
+                    fileLength + 
+                    (duplicates!=null?"\t"  +duplicates.Count+"\t"+
+                        elapsed.TotalSeconds :"\tNaN\tNaN");
+            }
         }
     }
 }

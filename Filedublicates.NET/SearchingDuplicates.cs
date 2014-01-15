@@ -5,7 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+
 using System.Windows.Forms;
 
 namespace Filedublicates.NET
@@ -14,18 +15,17 @@ namespace Filedublicates.NET
     {
         Timer tmr = new Timer();
 
-        private Form1 mainForm;
+        private MainForm mainForm;
+        private System.Threading.Thread th;
 
-        long totalCmpOps;
+        
 
-        public SearchingDuplicates(Form1 mainForm)
+        public SearchingDuplicates(MainForm mainForm)
         {
             InitializeComponent();
 
             this.mainForm = mainForm;
-            totalCmpOps = mainForm.byteByByteFileComparer.totalNumberOfCmpOps;
-
-            labelTotalCmpOpNumber.Text = totalCmpOps.ToString();
+                        
             if (mainForm.hashingAndByteByByteComparer!=null)
                 labelTotalHashingOp.Text = mainForm.hashingAndByteByByteComparer.groupFilesByHash.totalNumberOfBytesToBeHashed.ToString();
             tmr.Tick += tmr_Tick;
@@ -33,26 +33,53 @@ namespace Filedublicates.NET
             tmr.Start();
         }
 
+        public SearchingDuplicates(MainForm mainForm, System.Threading.Thread th) : 
+            this(mainForm)
+        {            
+            this.th = th;
+        }
+
         void tmr_Tick(object sender, EventArgs e)
         {
+            if (!th.IsAlive)
+            {
+                tmr.Stop();
+                Hide();
+                mainForm.updateUIafterSearching();                
+            }
+
             if (mainForm.byteByByteFileComparer != null)
             {
                 labelCmpOpPassed.Text = mainForm.byteByByteFileComparer.numberOfCmpOpPassed.
                     ToString();
-                progressBarByteByByteComparsion.Value = (int)
+                
+                long totalCmpOps = mainForm.byteByByteFileComparer.totalNumberOfCmpOps;
+
+                labelTotalCmpOpNumber.Text = totalCmpOps.ToString();
+                if (totalCmpOps > 0)
+                {
+                    int progressValue = (int)
                     (mainForm.byteByByteFileComparer.numberOfCmpOpPassed * 100 / totalCmpOps);
 
-                if (progressBarByteByByteComparsion.Value >= 100 && mainForm.hashingAndByteByByteComparer == null)
-                    Hide();
+                    if (0 <= progressValue && progressValue <= 100)
+                        progressBarByteByByteComparsion.Value = progressValue;
+                }
+                
             }
 
             if (mainForm.hashingAndByteByByteComparer != null)
             {
                 var habbc = mainForm.hashingAndByteByByteComparer;
                 var gfbh = habbc.groupFilesByHash;
-                progressBarHashing.Value = (int)
-                    (gfbh.bytesHashed * 100 /
-                    gfbh.totalNumberOfBytesToBeHashed);
+
+                if (gfbh.totalNumberOfBytesToBeHashed > 0)
+                {
+                    int progressValue = (int)
+                        (gfbh.bytesHashed * 100 /
+                        gfbh.totalNumberOfBytesToBeHashed);
+                    if (0<=progressValue && progressValue<=100)
+                        progressBarHashing.Value = progressValue;
+                }
                 labelPassedHashingOp.Text = habbc.hashGroupIndex.ToString();
             }
         }

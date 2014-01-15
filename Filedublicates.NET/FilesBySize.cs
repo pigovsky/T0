@@ -12,6 +12,10 @@ namespace Filedublicates.NET
     [Serializable]
     class GroupFilesBySize : Dictionary<long, FilesWithSameLengthAndDuplicates>
     {
+
+        public static Dictionary<long, double> readTimes = new Dictionary<long, double>();
+        public static Dictionary<long, double> hashingTimes = new Dictionary<long, double>();
+
         private TimeSpan _elapsed;
 
         public TimeSpan elapsed 
@@ -29,7 +33,7 @@ namespace Filedublicates.NET
         public GroupFilesBySize(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
 
-        public GroupFilesBySize(DirectoryInfo dir, Form1 form)
+        public GroupFilesBySize(DirectoryInfo dir, MainForm form)
         {
             this.form = form;
             this.parentDir = dir;
@@ -110,7 +114,7 @@ namespace Filedublicates.NET
                 fileList = this[fileLength];
             else
             {
-                fileList = new FilesWithSameLengthAndDuplicates();
+                fileList = new FilesWithSameLengthAndDuplicates(fileLength);
                 this.Add(fileLength, fileList);
                 //if (needUpdate)
                     //form.rootTreeNodeAdded(fileLength);
@@ -120,7 +124,7 @@ namespace Filedublicates.NET
         }
 
         
-        public Form1 form { get; set; }
+        public MainForm form { get; set; }
 
         int _directoriesProcessed;
 
