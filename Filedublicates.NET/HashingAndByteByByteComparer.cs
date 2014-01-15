@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Filedublicates.NET
 {
-    public class HashingAndByteByByteComparer : Filedublicates.NET.AbstractComparer
+    public class HashingAndByteByByteComparer : AbstractComparer
     {
+
         public ByteByByteFileComparer byteByByteFileComparer { get; set; }
+
         public GroupFilesByHash groupFilesByHash { get; set; }
 
         public long hashGroupIndex { get; set; }
@@ -17,21 +19,19 @@ namespace Filedublicates.NET
         {
             DateTime startAll = DateTime.Now;
 
-            groupFilesByHash.hashFiles(files);
+            groupFilesByHash.hashFiles(filesWithSameLengthAndDuplicates.filesWithSameLength);
+            
+            byteByByteFileComparer.filesWithSameLengthAndDuplicates = this.filesWithSameLengthAndDuplicates;
 
             hashGroupIndex = 0;
             foreach (var hashGroup in groupFilesByHash)
             {
-                byteByByteFileComparer.files = hashGroup.Value;
-                byteByByteFileComparer.detectDuplicates();
+                
+                byteByByteFileComparer.detectDuplicates(hashGroup.Value);
                 hashGroupIndex++;
             }
 
-            if (totalTimeElapsed != null)
-            {
-                totalTimeElapsed.Add(byteByByteFileComparer.fileLength, 
-                    (DateTime.Now - startAll).TotalSeconds);
-            }
+            filesWithSameLengthAndDuplicates.elapsed = DateTime.Now - startAll;            
         }
     }
 }

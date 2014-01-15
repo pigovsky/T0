@@ -11,32 +11,46 @@ namespace Filedublicates.NET
     public class ByteByByteFileComparer : Filedublicates.NET.AbstractComparer
     {
 
-        
-
-        public long totalNumberOfCmpOps()
+        private long _totalNumberOfCmpOps;
+        public long totalNumberOfCmpOps
         {
-            return files.Count * (files.Count - 1) * fileLength ;
+            get
+            {
+                return _totalNumberOfCmpOps;
+            }
         }
 
         byte[] buffer1 = new byte[Environment.SystemPageSize];
         byte[] buffer2 = new byte[Environment.SystemPageSize];
         
         long numberOfBytesRead;
-        public long numberOfCmpOpPassed { get; set; }     
+        public long numberOfCmpOpPassed { get; set; }             
         
-        public List<FileList> duplicates {get; set;}
         public Dictionary<long, double> readTimes { get; set; }
 
         override public void detectDuplicates()
         {
             DateTime startAll = DateTime.Now;
+
+            detectDuplicates(filesWithSameLengthAndDuplicates.filesWithSameLength);
+
+            filesWithSameLengthAndDuplicates.elapsed = DateTime.Now - startAll;
+        }
+
+        public void detectDuplicates(FileList files)
+        {            
+            long fileLength = files[0].Length;
+
+            _totalNumberOfCmpOps = files.Count *
+                (files.Count - 1) * fileLength;
+
             numberOfCmpOpPassed = 0;
-            
-            for (int i = 0; i < files.Count-1; i++,
-                numberOfCmpOpPassed = fileLength * (2 * files.Count - i - 3) * i )
+
+            for (int i = 0; i < files.Count - 1; i++,
+                numberOfCmpOpPassed = fileLength * (2 * files.Count - i - 3) * i)
             {
-                
-                var files_i = files[i]; 
+
+                var files_i = files[i];
                 if (files_i == null)
                     continue;
 
@@ -68,10 +82,10 @@ namespace Filedublicates.NET
                         files[j] = null;
                     }
 
-                    f2.Close();                    
+                    f2.Close();
 
-                    DateTime finish = DateTime.Now;
-                    double elapsed = (finish - start).TotalMilliseconds;
+                    
+                    double elapsed = (DateTime.Now - start).TotalMilliseconds;
 
                     if (readTimes.ContainsKey(numberOfBytesRead))
                     {
@@ -84,15 +98,12 @@ namespace Filedublicates.NET
                     }
                 }
                 if (same != null)
-                    duplicates.Add(same);
-
+                {
+                    filesWithSameLengthAndDuplicates.AddDuplicate(same);
+                }
                 f1.Close();
             }
-            numberOfCmpOpPassed = totalNumberOfCmpOps();
-            if (totalTimeElapsed != null)
-            {
-                totalTimeElapsed.Add(fileLength, (DateTime.Now - startAll).TotalSeconds);
-            }
+            numberOfCmpOpPassed = totalNumberOfCmpOps;            
         }
 
         [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]

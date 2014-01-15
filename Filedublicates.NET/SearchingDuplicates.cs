@@ -23,7 +23,7 @@ namespace Filedublicates.NET
             InitializeComponent();
 
             this.mainForm = mainForm;
-            totalCmpOps = mainForm.byteByByteFileComparer.totalNumberOfCmpOps();
+            totalCmpOps = mainForm.byteByByteFileComparer.totalNumberOfCmpOps;
 
             labelTotalCmpOpNumber.Text = totalCmpOps.ToString();
             if (mainForm.hashingAndByteByByteComparer!=null)

@@ -5,24 +5,21 @@ namespace Filedublicates.NET
 {
     public abstract class AbstractComparer
     {
-        public abstract void detectDuplicates();
+        public abstract void detectDuplicates();        
 
-        public long fileLength { get; set; }
-
-        private FileList _files;
-        public FileList files
+        private FilesWithSameLengthAndDuplicates _filesWithSameLengthAndDuplicates;
+        public FilesWithSameLengthAndDuplicates filesWithSameLengthAndDuplicates
         {
             get
             {
-                return _files;
+                return _filesWithSameLengthAndDuplicates;
             }
             set
             {
-                _files = value;
-                fileLength = _files[0].Length;
+                _filesWithSameLengthAndDuplicates = value;
+                
             }
         }
 
-        public Dictionary<long, double> totalTimeElapsed { get; set; }
     }
 }

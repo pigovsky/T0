@@ -40,14 +40,14 @@ namespace Filedublicates.NET
                 Invoke(new ThreadStart(rootTreeNodeAdded));
             else
             {
-                var sortedDict = (from entry in filesWithSameLength where entry.Value.Count>1 orderby entry.Value.Count descending, entry.Key ascending select entry).Take(100);
+                var sortedDict = (from entry in filesWithSameLength where entry.Value.filesWithSameLength.Count>1 orderby entry.Value.filesWithSameLength.Count descending, entry.Key ascending select entry).Take(100);
                 //MessageBox.Show(filesWithSameLength.Count.ToString());
                 treeView1.Nodes.Clear();
                 foreach (var entry in sortedDict)
                 {                                      
                     var tn = new TreeNode();
                     tn.Tag = entry.Key;
-                    tn.Text = ""+ entry.Value.Count+ " files of " + entry.Key + " bytes";
+                    tn.Text = ""+ entry.Value.filesWithSameLength.Count+ " files of " + entry.Key + " bytes";
                     treeView1.Nodes.Add(tn);
                     tn.Nodes.Add("stub");                  
                 }
@@ -73,6 +73,8 @@ namespace Filedublicates.NET
         public Form1()
         {
             InitializeComponent();
+            hashingAndByteByByteComparer.byteByByteFileComparer = byteByByteFileComparer;
+            hashingAndByteByByteComparer.groupFilesByHash = groupFilesByHash;
         }
 
         private void searchFilesWithSameLengthToolStripMenuItem_Click(object sender, EventArgs e)
@@ -132,9 +134,7 @@ namespace Filedublicates.NET
             Process.Start("notepad.exe", file.Name);
         }
 
-        // first long is file length, second long -- is time in seconds,
-        // which was consumed to find duplicates in this file-length group:
-        Dictionary<long, double> totalTimeElapsed = new Dictionary<long,double>();
+        
 
         private void exportInfoAboutFilesWithSameLengthToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -143,15 +143,20 @@ namespace Filedublicates.NET
             if (sfd.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 return;
 
-            var sortedDict = from entry in filesWithSameLength where entry.Value.Count > 1 orderby entry.Value.Count ascending, entry.Key ascending select entry;
+            var sortedDict = from entry in filesWithSameLength where entry.Value.numberOfFilesWithSameLength > 1 orderby entry.Value.numberOfFilesWithSameLength ascending, entry.Key ascending select entry;
 
             var file = File.CreateText(sfd.FileName);
 
             file.WriteLine("files = [\n" +
-                "//\t Number of files\t file length");
+                "//\t Number of files\t file length\t Time to find duplicates, sec."+
+                "\t Number of duplicate groups");
 
             foreach (var entry in sortedDict)
-                file.WriteLine("\t" + entry.Value.Count + "\t" + entry.Key);
+            {
+                file.WriteLine("\t" + entry.Value.filesWithSameLength.Count + "\t"+
+                    entry.Key+"\t"+entry.Value.elapsed.TotalSeconds+"\t"+
+                    entry.Value.duplicates.Count);
+            }
             file.WriteLine("];");
             file.WriteLine("// Files with same length were found in " +
                             filesWithSameLength.elapsed.TotalSeconds
@@ -161,23 +166,8 @@ namespace Filedublicates.NET
             WriteTimeMeasurementsToFile(file, "hashingTimes", hashingTimes);
             
 
-            foreach (var sizeTime in totalTimeElapsed)
-            {
-                file.WriteLine("Duplicates in group of " +
-                    sizeTime.Key + "bytes were found in " + sizeTime.Value + " seconds");
-            }
-
-            foreach (var entry in allDuplicates)
-            {
-                if (entry.Count >= 2)
-                {
-                    file.WriteLine("Following "+entry.Count+ " files are with equal " + entry[0].Length + " bytes content");
-                    foreach (var f in entry)
-                        file.WriteLine(f);
-
-                    file.WriteLine();
-                }
-            }
+            
+            
             file.Close();
         }
 
@@ -193,38 +183,35 @@ namespace Filedublicates.NET
         private void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             TreeNode tn = e.Node;
-            if (!(tn.Tag is long))
-                return;
 
-            long fileSize = (long)tn.Tag;
-            var filesGroup = filesWithSameLength[fileSize];
-
-            tn.Nodes.Clear();
-
-            foreach (var file in filesGroup)
+            if (tn.Tag is long)
             {
-                var fn = new TreeNode();
-                fn.Tag = file;
-                try
+                long fileSize = (long)tn.Tag;
+                var filesGroup = filesWithSameLength[fileSize];
+                filesGroup.populateTreeNode(tn);
+            }
+            else if (tn.Tag is FileList)
+            {
+                var duplicateFiles = (FileList)tn.Tag;
+                tn.Nodes.Clear();
+                foreach (var file in duplicateFiles)
                 {
+                    var fn = new TreeNode();
+                    fn.Tag = file;                   
                     fn.Text = file.FullName;
+                    tn.Nodes.Add(fn);
                 }
-                catch (Exception err)
-                {
-                    fn.Text = "crazy-long file path...";
-                }
-                tn.Nodes.Add(fn);
             }
         }
 
         static Dictionary<long, double> readTimes = new Dictionary<long,double>();
         static Dictionary<long, double> hashingTimes = new Dictionary<long,double>();
+        
 
-        static List<FileList> allDuplicates = new List<FileList>();
-
-        public ByteByByteFileComparer byteByByteFileComparer = null;
+        public ByteByByteFileComparer byteByByteFileComparer = new ByteByByteFileComparer { readTimes = readTimes };
         private GroupFilesByHash groupFilesByHash = new GroupFilesByHash() { hashingTimes = hashingTimes };
-        public HashingAndByteByByteComparer hashingAndByteByByteComparer = null;
+        
+        public HashingAndByteByByteComparer hashingAndByteByByteComparer = new HashingAndByteByByteComparer();
 
         SearchingDuplicates sd;
 
@@ -234,7 +221,7 @@ namespace Filedublicates.NET
                 return false;
 
             long fileSize = (long)treeView1.SelectedNode.Tag;
-            ac.files = filesWithSameLength[fileSize];
+            ac.filesWithSameLengthAndDuplicates = filesWithSameLength[fileSize];
 
             sd = new SearchingDuplicates(this);
 
@@ -248,28 +235,13 @@ namespace Filedublicates.NET
         }
 
         private void byteByByteComparsionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-                   
-            byteByByteFileComparer = new ByteByByteFileComparer 
-            { duplicates = allDuplicates, readTimes = readTimes, 
-                totalTimeElapsed = this.totalTimeElapsed};
-
+        {                                           
             doCompare(byteByByteFileComparer);
-
         }
 
         private void hashingByteByByteComparsionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            byteByByteFileComparer = new ByteByByteFileComparer { duplicates = allDuplicates, readTimes = readTimes };
-            hashingAndByteByByteComparer = new HashingAndByteByByteComparer()
-                {
-                    byteByByteFileComparer = byteByByteFileComparer,
-                    totalTimeElapsed = totalTimeElapsed,
-                    groupFilesByHash = groupFilesByHash
-                };
-
+        {            
             doCompare(hashingAndByteByByteComparer);
-
         }
     }
 }

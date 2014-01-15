@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace Filedublicates.NET
 {
     [Serializable]
-    class GroupFilesBySize : Dictionary<long, FileList>
+    class GroupFilesBySize : Dictionary<long, FilesWithSameLengthAndDuplicates>
     {
         private TimeSpan _elapsed;
 
@@ -105,12 +105,12 @@ namespace Filedublicates.NET
                 return;
             }
             long fileLength = file.Length;
-            FileList fileList = null;
+            FilesWithSameLengthAndDuplicates fileList = null;
             if (this.ContainsKey(fileLength))
                 fileList = this[fileLength];
             else
             {
-                fileList = new FileList();
+                fileList = new FilesWithSameLengthAndDuplicates();
                 this.Add(fileLength, fileList);
                 //if (needUpdate)
                     //form.rootTreeNodeAdded(fileLength);
