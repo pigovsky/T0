@@ -44,6 +44,9 @@
             this.labelTotalHashingOp = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.labelPassedHashingOp = new System.Windows.Forms.Label();
+            this.progressBarOverallProcess = new System.Windows.Forms.ProgressBar();
+            this.label9 = new System.Windows.Forms.Label();
+            this.buttonStop = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // progressBarByteByByteComparsion
@@ -52,7 +55,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBarByteByByteComparsion.Location = new System.Drawing.Point(16, 38);
             this.progressBarByteByByteComparsion.Name = "progressBarByteByByteComparsion";
-            this.progressBarByteByByteComparsion.Size = new System.Drawing.Size(378, 23);
+            this.progressBarByteByByteComparsion.Size = new System.Drawing.Size(479, 23);
             this.progressBarByteByByteComparsion.TabIndex = 0;
             // 
             // label1
@@ -67,7 +70,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 188);
+            this.label2.Location = new System.Drawing.Point(16, 150);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 13);
             this.label2.TabIndex = 2;
@@ -77,15 +80,15 @@
             // 
             this.progressBarHashing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBarHashing.Location = new System.Drawing.Point(12, 204);
+            this.progressBarHashing.Location = new System.Drawing.Point(16, 166);
             this.progressBarHashing.Name = "progressBarHashing";
-            this.progressBarHashing.Size = new System.Drawing.Size(378, 23);
+            this.progressBarHashing.Size = new System.Drawing.Size(479, 23);
             this.progressBarHashing.TabIndex = 3;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 79);
+            this.label3.Location = new System.Drawing.Point(13, 75);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(190, 13);
             this.label3.TabIndex = 4;
@@ -94,7 +97,7 @@
             // labelTotalCmpOpNumber
             // 
             this.labelTotalCmpOpNumber.AutoSize = true;
-            this.labelTotalCmpOpNumber.Location = new System.Drawing.Point(209, 79);
+            this.labelTotalCmpOpNumber.Location = new System.Drawing.Point(221, 75);
             this.labelTotalCmpOpNumber.MaximumSize = new System.Drawing.Size(100, 0);
             this.labelTotalCmpOpNumber.MinimumSize = new System.Drawing.Size(100, 0);
             this.labelTotalCmpOpNumber.Name = "labelTotalCmpOpNumber";
@@ -105,7 +108,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 105);
+            this.label4.Location = new System.Drawing.Point(13, 101);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(202, 13);
             this.label4.TabIndex = 6;
@@ -114,7 +117,7 @@
             // labelCmpOpPassed
             // 
             this.labelCmpOpPassed.AutoSize = true;
-            this.labelCmpOpPassed.Location = new System.Drawing.Point(221, 105);
+            this.labelCmpOpPassed.Location = new System.Drawing.Point(221, 101);
             this.labelCmpOpPassed.MaximumSize = new System.Drawing.Size(100, 0);
             this.labelCmpOpPassed.MinimumSize = new System.Drawing.Size(100, 0);
             this.labelCmpOpPassed.Name = "labelCmpOpPassed";
@@ -125,7 +128,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 128);
+            this.label5.Location = new System.Drawing.Point(13, 124);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(147, 13);
             this.label5.TabIndex = 8;
@@ -134,7 +137,7 @@
             // labelEstimatedTimeForCmp
             // 
             this.labelEstimatedTimeForCmp.AutoSize = true;
-            this.labelEstimatedTimeForCmp.Location = new System.Drawing.Point(166, 128);
+            this.labelEstimatedTimeForCmp.Location = new System.Drawing.Point(166, 124);
             this.labelEstimatedTimeForCmp.MinimumSize = new System.Drawing.Size(100, 0);
             this.labelEstimatedTimeForCmp.Name = "labelEstimatedTimeForCmp";
             this.labelEstimatedTimeForCmp.Size = new System.Drawing.Size(100, 13);
@@ -144,7 +147,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 153);
+            this.label6.Location = new System.Drawing.Point(16, 307);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(67, 13);
             this.label6.TabIndex = 10;
@@ -153,7 +156,7 @@
             // labelTimePassed
             // 
             this.labelTimePassed.AutoSize = true;
-            this.labelTimePassed.Location = new System.Drawing.Point(86, 153);
+            this.labelTimePassed.Location = new System.Drawing.Point(90, 307);
             this.labelTimePassed.MinimumSize = new System.Drawing.Size(100, 0);
             this.labelTimePassed.Name = "labelTimePassed";
             this.labelTimePassed.Size = new System.Drawing.Size(100, 13);
@@ -163,7 +166,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(13, 242);
+            this.label7.Location = new System.Drawing.Point(17, 204);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(173, 13);
             this.label7.TabIndex = 12;
@@ -172,7 +175,7 @@
             // labelTotalHashingOp
             // 
             this.labelTotalHashingOp.AutoSize = true;
-            this.labelTotalHashingOp.Location = new System.Drawing.Point(192, 242);
+            this.labelTotalHashingOp.Location = new System.Drawing.Point(196, 204);
             this.labelTotalHashingOp.MaximumSize = new System.Drawing.Size(100, 0);
             this.labelTotalHashingOp.MinimumSize = new System.Drawing.Size(100, 0);
             this.labelTotalHashingOp.Name = "labelTotalHashingOp";
@@ -183,7 +186,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(13, 269);
+            this.label8.Location = new System.Drawing.Point(17, 231);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(185, 13);
             this.label8.TabIndex = 14;
@@ -192,7 +195,7 @@
             // labelPassedHashingOp
             // 
             this.labelPassedHashingOp.AutoSize = true;
-            this.labelPassedHashingOp.Location = new System.Drawing.Point(204, 270);
+            this.labelPassedHashingOp.Location = new System.Drawing.Point(208, 232);
             this.labelPassedHashingOp.MaximumSize = new System.Drawing.Size(100, 0);
             this.labelPassedHashingOp.MinimumSize = new System.Drawing.Size(100, 0);
             this.labelPassedHashingOp.Name = "labelPassedHashingOp";
@@ -200,11 +203,42 @@
             this.labelPassedHashingOp.TabIndex = 13;
             this.labelPassedHashingOp.Text = "0";
             // 
+            // progressBarOverallProcess
+            // 
+            this.progressBarOverallProcess.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBarOverallProcess.Location = new System.Drawing.Point(16, 270);
+            this.progressBarOverallProcess.Name = "progressBarOverallProcess";
+            this.progressBarOverallProcess.Size = new System.Drawing.Size(479, 23);
+            this.progressBarOverallProcess.TabIndex = 15;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(17, 254);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(80, 13);
+            this.label9.TabIndex = 16;
+            this.label9.Text = "Overall process";
+            // 
+            // buttonStop
+            // 
+            this.buttonStop.Location = new System.Drawing.Point(419, 307);
+            this.buttonStop.Name = "buttonStop";
+            this.buttonStop.Size = new System.Drawing.Size(75, 23);
+            this.buttonStop.TabIndex = 17;
+            this.buttonStop.Text = "Stop";
+            this.buttonStop.UseVisualStyleBackColor = true;
+            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
+            // 
             // SearchingDuplicates
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(406, 292);
+            this.ClientSize = new System.Drawing.Size(507, 336);
+            this.Controls.Add(this.buttonStop);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.progressBarOverallProcess);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.labelPassedHashingOp);
             this.Controls.Add(this.labelTotalHashingOp);
@@ -246,5 +280,8 @@
         private System.Windows.Forms.Label labelTotalHashingOp;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label labelPassedHashingOp;
+        private System.Windows.Forms.ProgressBar progressBarOverallProcess;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button buttonStop;
     }
 }

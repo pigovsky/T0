@@ -11,11 +11,14 @@ namespace Filedublicates.NET
     [Serializable]
     public class FilesWithSameLengthAndDuplicates
     {
+        public ProcessAlgorithm processedUsingAlgorithm { get; set; }
+
         public long fileLength { get; set; }
 
         public FilesWithSameLengthAndDuplicates(long fileLength)
         {
             this.fileLength = fileLength;
+            processedUsingAlgorithm = ProcessAlgorithm.NOT_PROCESSED;
         }
 
         public FileList filesWithSameLength { get; set; }
@@ -90,7 +93,7 @@ namespace Filedublicates.NET
         {
             return "" + numberOfFilesWithSameLength + " files of " + fileLength + " bytes" +
                 (duplicates != null ? ", splitted to " +duplicates.Count + " duplicate groups "+
-                "in " + elapsed.TotalSeconds + " sec." : "") ;                                
+                "in " + elapsed.TotalSeconds + " sec. using algorihtm " + processedUsingAlgorithm : "") ;                                
         }
 
         public string descriptionString
@@ -100,7 +103,8 @@ namespace Filedublicates.NET
                 return ""+numberOfFilesWithSameLength + "\t" +
                     fileLength + 
                     (duplicates!=null?"\t"  +duplicates.Count+"\t"+
-                        elapsed.TotalSeconds :"\tNaN\tNaN");
+                        elapsed.TotalSeconds
+                        : "\tNaN\tNaN") + "\t" + processedUsingAlgorithm;
             }
         }
     }

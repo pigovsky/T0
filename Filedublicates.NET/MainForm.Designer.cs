@@ -40,6 +40,9 @@
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.allToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.byteByByteComparsionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.hashingAndByteByByteComparsionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -98,7 +101,8 @@
             // 
             this.findDuplicatesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.byteByByteComparsionToolStripMenuItem,
-            this.hashingByteByByteComparsionToolStripMenuItem});
+            this.hashingByteByByteComparsionToolStripMenuItem,
+            this.allToolStripMenuItem});
             this.findDuplicatesToolStripMenuItem.Name = "findDuplicatesToolStripMenuItem";
             this.findDuplicatesToolStripMenuItem.Size = new System.Drawing.Size(99, 20);
             this.findDuplicatesToolStripMenuItem.Text = "Find duplicates";
@@ -145,7 +149,30 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
-            // Form1
+            // allToolStripMenuItem
+            // 
+            this.allToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.byteByByteComparsionToolStripMenuItem1,
+            this.hashingAndByteByByteComparsionToolStripMenuItem});
+            this.allToolStripMenuItem.Name = "allToolStripMenuItem";
+            this.allToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
+            this.allToolStripMenuItem.Text = "All";
+            // 
+            // byteByByteComparsionToolStripMenuItem1
+            // 
+            this.byteByByteComparsionToolStripMenuItem1.Name = "byteByByteComparsionToolStripMenuItem1";
+            this.byteByByteComparsionToolStripMenuItem1.Size = new System.Drawing.Size(275, 22);
+            this.byteByByteComparsionToolStripMenuItem1.Text = "Byte by byte comparsion";
+            this.byteByByteComparsionToolStripMenuItem1.Click += new System.EventHandler(this.byteByByteComparsionToolStripMenuItem1_Click);
+            // 
+            // hashingAndByteByByteComparsionToolStripMenuItem
+            // 
+            this.hashingAndByteByByteComparsionToolStripMenuItem.Name = "hashingAndByteByByteComparsionToolStripMenuItem";
+            this.hashingAndByteByByteComparsionToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.hashingAndByteByByteComparsionToolStripMenuItem.Text = "Hashing and byte by byte comparsion";
+            this.hashingAndByteByByteComparsionToolStripMenuItem.Click += new System.EventHandler(this.hashingAndByteByByteComparsionToolStripMenuItem_Click);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -154,7 +181,7 @@
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -179,6 +206,9 @@
         private System.Windows.Forms.ToolStripMenuItem findDuplicatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem byteByByteComparsionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hashingByteByByteComparsionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem allToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem byteByByteComparsionToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem hashingAndByteByByteComparsionToolStripMenuItem;
     }
 }
 

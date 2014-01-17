@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace Filedublicates.NET
 {
-    public abstract class AbstractComparer
+    public abstract class AbstractComparer : Filedublicates.NET.IAbstractComparer
     {
-        public abstract void detectDuplicates();
-
         
         protected void calculateTotalNumberOfCmpOps(FileList files)
         {            

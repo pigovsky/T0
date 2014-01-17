@@ -11,18 +11,30 @@ using System.Windows.Forms;
 
 namespace Filedublicates.NET
 {
+    
+
     public partial class SearchingDuplicates : Form
     {
-        Timer tmr = new Timer();
+        private Timer tmr = new Timer();
+
+        private DateTime startTime;
+
+        public bool stop { get; set; }
+
+        public long totalNumberOfIterationsInOverallProcess { get; set; }
+        public long numberOfIterationsInOverallProcessPassed { get; set; }
 
         private MainForm mainForm;
-        private System.Threading.Thread th;
+        public System.Threading.Thread th { get; set; }
 
         
 
         public SearchingDuplicates(MainForm mainForm)
         {
             InitializeComponent();
+
+            stop = false;
+            startTime = DateTime.Now;
 
             this.mainForm = mainForm;
                         
@@ -45,7 +57,20 @@ namespace Filedublicates.NET
             {
                 tmr.Stop();
                 Hide();
-                mainForm.updateUIafterSearching();                
+                mainForm.updateUIafterSearching();
+                return;
+            }
+
+            var timeSpan = DateTime.Now - startTime;
+            labelTimePassed.Text = "" + Math.Floor(timeSpan.TotalHours) + ":" +
+                timeSpan.Minutes + ":" + timeSpan.Seconds;
+
+            if (totalNumberOfIterationsInOverallProcess > 0)
+            {
+                int progressValue = (int) (numberOfIterationsInOverallProcessPassed *100 /
+                    totalNumberOfIterationsInOverallProcess);
+                if (0 <= progressValue && progressValue <= 100)
+                    progressBarOverallProcess.Value = progressValue;
             }
 
             if (mainForm.byteByByteFileComparer != null)
@@ -82,6 +107,11 @@ namespace Filedublicates.NET
                 }
                 labelPassedHashingOp.Text = habbc.hashGroupIndex.ToString();
             }
+        }
+
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            stop = true;
         }
     }
 }

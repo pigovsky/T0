@@ -149,7 +149,7 @@ namespace Filedublicates.NET
 
             file.WriteLine("files = [\n" +
                 "//\t Number of files\t file length"+
-                "\t Number of duplicate groups\t Time to find duplicates, sec.");
+                "\t Number of duplicate groups\t Time to find duplicates, sec.\t Algorithm");
 
             foreach (var entry in sortedDict)
             {
@@ -159,9 +159,9 @@ namespace Filedublicates.NET
             file.WriteLine("// Files with same length were found in " +
                             filesWithSameLength.elapsed.TotalSeconds
                             + " seconds");
-            
-            WriteTimeMeasurementsToFile(file, "readingTimes", readTimes);
-            WriteTimeMeasurementsToFile(file, "hashingTimes", hashingTimes);
+
+            WriteTimeMeasurementsToFile(file, "readingTimes", GroupFilesBySize.readTimes);
+            WriteTimeMeasurementsToFile(file, "hashingTimes", GroupFilesBySize.hashingTimes);
             
 
             
@@ -205,53 +205,91 @@ namespace Filedublicates.NET
         
         
 
-        public ByteByByteFileComparer byteByByteFileComparer = new ByteByByteFileComparer { readTimes = readTimes };
-        private GroupFilesByHash groupFilesByHash = new GroupFilesByHash() { hashingTimes = hashingTimes };
+        public ByteByByteFileComparer byteByByteFileComparer = new ByteByByteFileComparer { readTimes = GroupFilesBySize.readTimes };
+        private GroupFilesByHash groupFilesByHash = new GroupFilesByHash() { hashingTimes = GroupFilesBySize.hashingTimes };
         
         public HashingAndByteByByteComparer hashingAndByteByByteComparer = new HashingAndByteByByteComparer();
 
-        SearchingDuplicates sd;
+        
 
         private TreeNode selectedFileGroupTreeNode { get; set; }
 
-        private bool doCompare(AbstractComparer ac)
+        private bool assignFileGroupForComparer(AbstractComparer ac)
         {
             if (!(treeView1.SelectedNode.Tag is long))
                 return false;
-
-            selectedFileGroupTreeNode = treeView1.SelectedNode;
-
             long fileSize = (long)selectedFileGroupTreeNode.Tag;
             ac.filesWithSameLengthAndDuplicates = filesWithSameLength[fileSize];
-            
+
+            selectedFileGroupTreeNode = treeView1.SelectedNode;
+            return true;
+        }
+
+        private void assignAndCompare(AbstractComparer ac)
+        {
+            if (assignFileGroupForComparer(ac))
+                doCompare(ac);
+        }
+
+        private void doCompare(IAbstractComparer ac)
+        {
+
+            SearchingDuplicates sd = new SearchingDuplicates(this);
+
+            foreach (var comparer in new IAbstractComparer[] {
+                byteByByteFileComparer, hashingAndByteByByteComparer, 
+                findDuplicatesAmongAllFileLengthGroups})
+            {
+                comparer.searchingDuplicatesProgressDialog = sd;
+            }
+
             Thread th = new Thread(new
                 ThreadStart(ac.detectDuplicates));
-
-            sd = new SearchingDuplicates(this, th);
-
+            sd.th = th;
             
+                                    
             th.Start();
-
-            sd.ShowDialog();
-
-            return true;
+            sd.ShowDialog();            
         }
 
         private void byteByByteComparsionToolStripMenuItem_Click(object sender, EventArgs e)
         {                                           
-            doCompare(byteByByteFileComparer);
+            assignAndCompare(byteByByteFileComparer);
         }
 
         private void hashingByteByByteComparsionToolStripMenuItem_Click(object sender, EventArgs e)
-        {            
-            doCompare(hashingAndByteByByteComparer);
+        {
+            assignAndCompare(hashingAndByteByByteComparer);
         }
+
+
+
 
         internal void updateUIafterSearching()
         {
             var sn = selectedFileGroupTreeNode;
-            long fileSize = (long)sn.Tag;
-            sn.Text = filesWithSameLength[fileSize].ToString();
+            if (sn != null)
+            {
+                long fileSize = (long)sn.Tag;
+                sn.Text = filesWithSameLength[fileSize].ToString();
+            }
+        }
+
+        private FindDuplicatesAmongAllFileLengthGroups findDuplicatesAmongAllFileLengthGroups
+            = new FindDuplicatesAmongAllFileLengthGroups();
+
+        private void byteByByteComparsionToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            findDuplicatesAmongAllFileLengthGroups.filesWithSameLength = filesWithSameLength;
+            findDuplicatesAmongAllFileLengthGroups.abstractComparer = byteByByteFileComparer;
+            doCompare(findDuplicatesAmongAllFileLengthGroups);
+        }
+
+        private void hashingAndByteByByteComparsionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            findDuplicatesAmongAllFileLengthGroups.filesWithSameLength = filesWithSameLength;
+            findDuplicatesAmongAllFileLengthGroups.abstractComparer = hashingAndByteByByteComparer;
+            doCompare(findDuplicatesAmongAllFileLengthGroups);
         }
     }
 }

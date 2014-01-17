@@ -47,6 +47,7 @@ namespace Filedublicates.NET
         public void hashFiles(FileList fileList)
         {            
             DateTime allStart = DateTime.Now;
+            this.Clear();
             bytesHashed = 0;
             totalNumberOfBytesToBeHashed = fileList.Count * fileList[0].Length;
             foreach (var file in fileList)

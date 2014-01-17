@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace Filedublicates.NET
 {
     [Serializable]
-    class GroupFilesBySize : Dictionary<long, FilesWithSameLengthAndDuplicates>
+    public class GroupFilesBySize : Dictionary<long, FilesWithSameLengthAndDuplicates>
     {
 
         public static Dictionary<long, double> readTimes = new Dictionary<long, double>();

@@ -31,6 +31,8 @@ namespace Filedublicates.NET
                 hashGroupIndex++;
             }
 
+            filesWithSameLengthAndDuplicates.filesWithSameLength = null;
+            filesWithSameLengthAndDuplicates.processedUsingAlgorithm = ProcessAlgorithm.HASHING_AND_BYTE_BY_BYTE;
             filesWithSameLengthAndDuplicates.elapsed = DateTime.Now - startAll;            
         }
     }
