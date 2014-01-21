@@ -11,24 +11,31 @@ namespace Filedublicates.NET
 
         public ByteByByteFileComparer byteByByteFileComparer { get; set; }
 
-        public GroupFilesByHash groupFilesByHash { get; set; }
+        
 
-        public long hashGroupIndex { get; set; }
+        
 
         override public void detectDuplicates()
         {
             DateTime startAll = DateTime.Now;
-
+            var groupFilesByHash = new GroupFilesByHash() { hashingTimes = GroupFilesBySize.hashingTimes };
+            groupFilesByHash.searchingDuplicatesProgressDialog = this.searchingDuplicatesProgressDialog;
+            searchingDuplicatesProgressDialog.totalNumberOfBytesToBeHashed =
+                filesWithSameLengthAndDuplicates.filesWithSameLength.Count * filesWithSameLengthAndDuplicates.fileLength;
             groupFilesByHash.hashFiles(filesWithSameLengthAndDuplicates.filesWithSameLength);
             
             byteByByteFileComparer.filesWithSameLengthAndDuplicates = this.filesWithSameLengthAndDuplicates;
 
-            hashGroupIndex = 0;
+            searchingDuplicatesProgressDialog.numberOfHashGroupIndexes = groupFilesByHash.Count;
+            searchingDuplicatesProgressDialog.hashGroupIndex = 0;
             foreach (var hashGroup in groupFilesByHash)
             {
-                
+                if (searchingDuplicatesProgressDialog.stop)
+                {
+                    break;
+                }
                 byteByByteFileComparer.detectDuplicates(hashGroup.Value);
-                hashGroupIndex++;
+                searchingDuplicatesProgressDialog. hashGroupIndex++;
             }
 
             filesWithSameLengthAndDuplicates.filesWithSameLength = null;

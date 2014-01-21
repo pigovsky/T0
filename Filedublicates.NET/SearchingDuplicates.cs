@@ -23,6 +23,16 @@ namespace Filedublicates.NET
 
         public long totalNumberOfIterationsInOverallProcess { get; set; }
         public long numberOfIterationsInOverallProcessPassed { get; set; }
+        public long bytesHashed { get; set; }
+        public long totalNumberOfBytesToBeHashed { get; set; }
+
+        public int numberOfFilesToBeHashed { get; set; }
+        public int numberOfHashedFiles { get; set; }
+
+        public long hashGroupIndex { get; set; }
+        public long numberOfHashGroupIndexes { get; set; }
+
+        public string currentFileBeingHeshed { get; set; }
 
         private MainForm mainForm;
         public System.Threading.Thread th { get; set; }
@@ -38,8 +48,7 @@ namespace Filedublicates.NET
 
             this.mainForm = mainForm;
                         
-            if (mainForm.hashingAndByteByByteComparer!=null)
-                labelTotalHashingOp.Text = mainForm.hashingAndByteByByteComparer.groupFilesByHash.totalNumberOfBytesToBeHashed.ToString();
+                
             tmr.Tick += tmr_Tick;
             tmr.Interval = 1000;
             tmr.Start();
@@ -95,17 +104,24 @@ namespace Filedublicates.NET
             if (mainForm.hashingAndByteByByteComparer != null)
             {
                 var habbc = mainForm.hashingAndByteByByteComparer;
-                var gfbh = habbc.groupFilesByHash;
+                
 
-                if (gfbh.totalNumberOfBytesToBeHashed > 0)
+                if (totalNumberOfBytesToBeHashed > 0)
                 {
+                    labelTotalHashingOp.Text = totalNumberOfBytesToBeHashed.ToString();
                     int progressValue = (int)
-                        (gfbh.bytesHashed * 100 /
-                        gfbh.totalNumberOfBytesToBeHashed);
+                        (bytesHashed * 100 /
+                        totalNumberOfBytesToBeHashed);
                     if (0<=progressValue && progressValue<=100)
                         progressBarHashing.Value = progressValue;
+                    labelNumberOfFilesToBeHashed.Text = numberOfFilesToBeHashed.ToString();
+                    labelNumberOfHashedFiles.Text = numberOfHashedFiles.ToString();
+                    labelCurrentFileBeingHeshed.Text = currentFileBeingHeshed;
                 }
-                labelPassedHashingOp.Text = habbc.hashGroupIndex.ToString();
+                labelTotalHashingOp.Text = numberOfHashGroupIndexes.ToString();
+                labelPassedHashingOp.Text = hashGroupIndex.ToString();
+
+                
             }
         }
 

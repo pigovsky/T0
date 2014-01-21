@@ -47,6 +47,11 @@
             this.progressBarOverallProcess = new System.Windows.Forms.ProgressBar();
             this.label9 = new System.Windows.Forms.Label();
             this.buttonStop = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.labelNumberOfFilesToBeHashed = new System.Windows.Forms.Label();
+            this.labelNumberOfHashedFiles = new System.Windows.Forms.Label();
+            this.labelCurrentFileBeingHeshed = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // progressBarByteByByteComparsion
@@ -55,7 +60,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBarByteByByteComparsion.Location = new System.Drawing.Point(16, 38);
             this.progressBarByteByByteComparsion.Name = "progressBarByteByByteComparsion";
-            this.progressBarByteByByteComparsion.Size = new System.Drawing.Size(479, 23);
+            this.progressBarByteByByteComparsion.Size = new System.Drawing.Size(609, 23);
             this.progressBarByteByByteComparsion.TabIndex = 0;
             // 
             // label1
@@ -70,7 +75,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 150);
+            this.label2.Location = new System.Drawing.Point(13, 237);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 13);
             this.label2.TabIndex = 2;
@@ -80,9 +85,9 @@
             // 
             this.progressBarHashing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBarHashing.Location = new System.Drawing.Point(16, 166);
+            this.progressBarHashing.Location = new System.Drawing.Point(13, 253);
             this.progressBarHashing.Name = "progressBarHashing";
-            this.progressBarHashing.Size = new System.Drawing.Size(479, 23);
+            this.progressBarHashing.Size = new System.Drawing.Size(609, 23);
             this.progressBarHashing.TabIndex = 3;
             // 
             // label3
@@ -147,7 +152,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(16, 307);
+            this.label6.Location = new System.Drawing.Point(12, 392);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(67, 13);
             this.label6.TabIndex = 10;
@@ -156,7 +161,7 @@
             // labelTimePassed
             // 
             this.labelTimePassed.AutoSize = true;
-            this.labelTimePassed.Location = new System.Drawing.Point(90, 307);
+            this.labelTimePassed.Location = new System.Drawing.Point(86, 392);
             this.labelTimePassed.MinimumSize = new System.Drawing.Size(100, 0);
             this.labelTimePassed.Name = "labelTimePassed";
             this.labelTimePassed.Size = new System.Drawing.Size(100, 13);
@@ -166,16 +171,16 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(17, 204);
+            this.label7.Location = new System.Drawing.Point(13, 152);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(173, 13);
+            this.label7.Size = new System.Drawing.Size(150, 13);
             this.label7.TabIndex = 12;
-            this.label7.Text = "Total number of hashing operations";
+            this.label7.Text = "Total number of hashin groups";
             // 
             // labelTotalHashingOp
             // 
             this.labelTotalHashingOp.AutoSize = true;
-            this.labelTotalHashingOp.Location = new System.Drawing.Point(196, 204);
+            this.labelTotalHashingOp.Location = new System.Drawing.Point(204, 152);
             this.labelTotalHashingOp.MaximumSize = new System.Drawing.Size(100, 0);
             this.labelTotalHashingOp.MinimumSize = new System.Drawing.Size(100, 0);
             this.labelTotalHashingOp.Name = "labelTotalHashingOp";
@@ -186,16 +191,16 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(17, 231);
+            this.label8.Location = new System.Drawing.Point(13, 179);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(185, 13);
+            this.label8.Size = new System.Drawing.Size(169, 13);
             this.label8.TabIndex = 14;
-            this.label8.Text = "Number of passed hashing operations";
+            this.label8.Text = "Number of processed hash groups";
             // 
             // labelPassedHashingOp
             // 
             this.labelPassedHashingOp.AutoSize = true;
-            this.labelPassedHashingOp.Location = new System.Drawing.Point(208, 232);
+            this.labelPassedHashingOp.Location = new System.Drawing.Point(204, 179);
             this.labelPassedHashingOp.MaximumSize = new System.Drawing.Size(100, 0);
             this.labelPassedHashingOp.MinimumSize = new System.Drawing.Size(100, 0);
             this.labelPassedHashingOp.Name = "labelPassedHashingOp";
@@ -207,15 +212,15 @@
             // 
             this.progressBarOverallProcess.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBarOverallProcess.Location = new System.Drawing.Point(16, 270);
+            this.progressBarOverallProcess.Location = new System.Drawing.Point(12, 355);
             this.progressBarOverallProcess.Name = "progressBarOverallProcess";
-            this.progressBarOverallProcess.Size = new System.Drawing.Size(479, 23);
+            this.progressBarOverallProcess.Size = new System.Drawing.Size(609, 23);
             this.progressBarOverallProcess.TabIndex = 15;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(17, 254);
+            this.label9.Location = new System.Drawing.Point(13, 339);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(80, 13);
             this.label9.TabIndex = 16;
@@ -223,7 +228,7 @@
             // 
             // buttonStop
             // 
-            this.buttonStop.Location = new System.Drawing.Point(419, 307);
+            this.buttonStop.Location = new System.Drawing.Point(415, 392);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(75, 23);
             this.buttonStop.TabIndex = 17;
@@ -231,11 +236,65 @@
             this.buttonStop.UseVisualStyleBackColor = true;
             this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(12, 288);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(142, 13);
+            this.label10.TabIndex = 18;
+            this.label10.Text = "Number of files to be hashed";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(13, 312);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(115, 13);
+            this.label11.TabIndex = 19;
+            this.label11.Text = "Number of hashed files";
+            // 
+            // labelNumberOfFilesToBeHashed
+            // 
+            this.labelNumberOfFilesToBeHashed.AutoSize = true;
+            this.labelNumberOfFilesToBeHashed.Location = new System.Drawing.Point(201, 288);
+            this.labelNumberOfFilesToBeHashed.MaximumSize = new System.Drawing.Size(100, 0);
+            this.labelNumberOfFilesToBeHashed.MinimumSize = new System.Drawing.Size(100, 0);
+            this.labelNumberOfFilesToBeHashed.Name = "labelNumberOfFilesToBeHashed";
+            this.labelNumberOfFilesToBeHashed.Size = new System.Drawing.Size(100, 13);
+            this.labelNumberOfFilesToBeHashed.TabIndex = 20;
+            this.labelNumberOfFilesToBeHashed.Text = "0";
+            // 
+            // labelNumberOfHashedFiles
+            // 
+            this.labelNumberOfHashedFiles.AutoSize = true;
+            this.labelNumberOfHashedFiles.Location = new System.Drawing.Point(201, 312);
+            this.labelNumberOfHashedFiles.MaximumSize = new System.Drawing.Size(100, 0);
+            this.labelNumberOfHashedFiles.MinimumSize = new System.Drawing.Size(100, 0);
+            this.labelNumberOfHashedFiles.Name = "labelNumberOfHashedFiles";
+            this.labelNumberOfHashedFiles.Size = new System.Drawing.Size(100, 13);
+            this.labelNumberOfHashedFiles.TabIndex = 21;
+            this.labelNumberOfHashedFiles.Text = "0";
+            // 
+            // labelCurrentFileBeingHeshed
+            // 
+            this.labelCurrentFileBeingHeshed.AutoSize = true;
+            this.labelCurrentFileBeingHeshed.Location = new System.Drawing.Point(65, 237);
+            this.labelCurrentFileBeingHeshed.Name = "labelCurrentFileBeingHeshed";
+            this.labelCurrentFileBeingHeshed.Size = new System.Drawing.Size(46, 13);
+            this.labelCurrentFileBeingHeshed.TabIndex = 22;
+            this.labelCurrentFileBeingHeshed.Text = "Hashing";
+            // 
             // SearchingDuplicates
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(507, 336);
+            this.ClientSize = new System.Drawing.Size(637, 420);
+            this.Controls.Add(this.labelCurrentFileBeingHeshed);
+            this.Controls.Add(this.labelNumberOfHashedFiles);
+            this.Controls.Add(this.labelNumberOfFilesToBeHashed);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.buttonStop);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.progressBarOverallProcess);
@@ -283,5 +342,10 @@
         private System.Windows.Forms.ProgressBar progressBarOverallProcess;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button buttonStop;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label labelNumberOfFilesToBeHashed;
+        private System.Windows.Forms.Label labelNumberOfHashedFiles;
+        private System.Windows.Forms.Label labelCurrentFileBeingHeshed;
     }
 }

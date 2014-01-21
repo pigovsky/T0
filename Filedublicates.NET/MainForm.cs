@@ -74,7 +74,7 @@ namespace Filedublicates.NET
         {
             InitializeComponent();
             hashingAndByteByByteComparer.byteByByteFileComparer = byteByByteFileComparer;
-            hashingAndByteByByteComparer.groupFilesByHash = groupFilesByHash;
+            
         }
 
         private void searchFilesWithSameLengthToolStripMenuItem_Click(object sender, EventArgs e)
@@ -206,7 +206,7 @@ namespace Filedublicates.NET
         
 
         public ByteByByteFileComparer byteByByteFileComparer = new ByteByByteFileComparer { readTimes = GroupFilesBySize.readTimes };
-        private GroupFilesByHash groupFilesByHash = new GroupFilesByHash() { hashingTimes = GroupFilesBySize.hashingTimes };
+        
         
         public HashingAndByteByByteComparer hashingAndByteByByteComparer = new HashingAndByteByByteComparer();
 

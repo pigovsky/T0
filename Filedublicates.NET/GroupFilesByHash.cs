@@ -10,25 +10,49 @@ namespace Filedublicates.NET
 {
     public class GroupFilesByHash : Dictionary<string, FileList>
     {
+
+        public SearchingDuplicates searchingDuplicatesProgressDialog { get; set; }
         public Dictionary<long, double> hashingTimes { get; set; }
-        public long bytesHashed { get; set; }
+        
         public static SHA1 sha1 = SHA1.Create();
         public static MD5 md5 = MD5.Create();
         public HashAlgorithm hashAlgorithm = md5;
 
-        public long totalNumberOfBytesToBeHashed { get; set; }    
-
         private string computeHash(FileInfo file)
         {
-            var fd = file.OpenRead();
-            string hashValue = Convert.ToBase64String(hashAlgorithm.ComputeHash(fd));
-            fd.Close();
+            searchingDuplicatesProgressDialog.currentFileBeingHeshed =
+                file.FullName;
+
+            FileStream fd = null;
+            string hashValue = null;
+            try
+            {
+                fd = file.OpenRead();
+                hashValue = Convert.ToBase64String(hashAlgorithm.ComputeHash(fd));
+            }
+            catch (Exception e)
+            {
+                Log.error(e);
+            }
+            finally
+            {
+                if (fd != null)
+                {
+                    fd.Close();
+                }
+            }
+            
             return hashValue;
         }
 
         private void AddFile(FileInfo file)
         {
+            DateTime start = DateTime.Now;
             string hashValue = computeHash(file);
+            if (hashValue == null)
+            {
+                return;
+            }
             FileList fileList = null;
             if (this.ContainsKey(hashValue))
                 fileList = this[hashValue];
@@ -39,7 +63,19 @@ namespace Filedublicates.NET
             }
             fileList.Add(file);
 
-            bytesHashed += file.Length;
+            searchingDuplicatesProgressDialog.bytesHashed += file.Length;
+            searchingDuplicatesProgressDialog.numberOfHashedFiles++;
+
+            double e = (DateTime.Now - start).TotalMilliseconds;
+            if (hashingTimes.ContainsKey(file.Length))
+            {
+                hashingTimes[file.Length] += e;
+                hashingTimes[file.Length] *= .5;
+            }
+            else
+            {
+                hashingTimes.Add(file.Length, e);
+            }
         }
 
         private TimeSpan _elapsed;
@@ -47,23 +83,19 @@ namespace Filedublicates.NET
         public void hashFiles(FileList fileList)
         {            
             DateTime allStart = DateTime.Now;
-            this.Clear();
-            bytesHashed = 0;
-            totalNumberOfBytesToBeHashed = fileList.Count * fileList[0].Length;
+            searchingDuplicatesProgressDialog.numberOfFilesToBeHashed = fileList.Count;
+            searchingDuplicatesProgressDialog.numberOfHashedFiles = 0;
+            searchingDuplicatesProgressDialog.bytesHashed = 0;
+            
             foreach (var file in fileList)
             {
-                DateTime start = DateTime.Now;
+                if (searchingDuplicatesProgressDialog.stop)
+                {
+                    break;
+                }
+                
                 AddFile(file);
-                double e = (DateTime.Now - start).TotalMilliseconds;
-                if (hashingTimes.ContainsKey(file.Length))
-                {
-                    hashingTimes[file.Length] += e;
-                    hashingTimes[file.Length] *= .5;
-                }
-                else
-                {
-                    hashingTimes.Add(file.Length, e);
-                }
+                
             }
             _elapsed = DateTime.Now - allStart;
         }
