@@ -101,10 +101,9 @@ namespace Filedublicates.NET
             get
             {
                 return ""+numberOfFilesWithSameLength + "\t" +
-                    fileLength + 
-                    (duplicates!=null?"\t"  +duplicates.Count+"\t"+
-                        elapsed.TotalSeconds
-                        : "\tNaN\tNaN") + "\t" + processedUsingAlgorithm;
+                    fileLength + "\t"+
+                    (duplicates!=null?duplicates.Count:0)+"\t"+
+                    elapsed.TotalSeconds + "\t" + processedUsingAlgorithm;
             }
         }
     }

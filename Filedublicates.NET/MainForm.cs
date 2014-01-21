@@ -40,7 +40,7 @@ namespace Filedublicates.NET
                 Invoke(new ThreadStart(rootTreeNodeAdded));
             else
             {
-                var sortedDict = (from entry in filesWithSameLength where entry.Value.filesWithSameLength.Count>1 orderby entry.Value.filesWithSameLength.Count descending, entry.Key ascending select entry).Take(100);
+                var sortedDict = (from entry in filesWithSameLength where entry.Value.numberOfFilesWithSameLength>1 orderby entry.Value.numberOfFilesWithSameLength descending, entry.Key ascending select entry).Take(100);
                 //MessageBox.Show(filesWithSameLength.Count.ToString());
                 treeView1.Nodes.Clear();
                 foreach (var entry in sortedDict)
